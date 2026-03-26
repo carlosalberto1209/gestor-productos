@@ -1,4 +1,6 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
+from fastapi.security import APIKeyHeader
+from fastapi import Security
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -7,6 +9,14 @@ import os
 
 from repository.productos_db import ProductosDB
 
+API_KEY = "53893735"
+
+api_key_header = APIKeyHeader(name="x-api-key")
+
+def verificar_api_key(api_key: str = Security(api_key_header)):
+
+    if api_key != API_KEY:
+        raise HTTPException(status_code=403, detail="No autorizado")
 
 app = FastAPI(
     title="Gestor de Productos",
@@ -77,6 +87,7 @@ def obtener_producto(num_parte: str):
 
 @app.post(
     "/productos",
+    dependencies=[Depends(verificar_api_key)],
     tags=["Productos"],
     summary="Crear producto",
     description="Crea un nuevo producto y permite subir una imagen"
@@ -130,6 +141,7 @@ def crear_producto(
 
 @app.put(
     "/productos/{num_parte}",
+    dependencies=[Depends(verificar_api_key)],
     tags=["Productos"],
     summary="Modificar producto",
     description="Actualiza un producto existente"
@@ -169,6 +181,7 @@ def modificar_producto(
 
 @app.delete(
     "/productos/{num_parte}",
+    dependencies=[Depends(verificar_api_key)],
     tags=["Productos"],
     summary="Eliminar producto",
     description="Elimina un producto y su imagen asociada"
