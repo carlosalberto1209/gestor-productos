@@ -40,7 +40,11 @@ Desarrollado con FastAPI 🚀
 ProductosDB.cargar()
 
 # Templates
-templates = Jinja2Templates(directory="templates")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+templates = Jinja2Templates(
+    directory=os.path.join(BASE_DIR, "templates")
+)
 
 # Crear carpeta de imágenes si no existe
 if not os.path.exists("images"):
