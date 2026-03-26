@@ -1,0 +1,20 @@
+[
+    {
+        "num_parte": "B030472",
+        "nombre": "Loctite 242",
+        "descripcion": "Fijador azul",
+        "imagen": "images/B030472.jpg"
+    },
+    {
+        "num_parte": "100466584",
+        "nombre": "Loctite 266",
+        "descripcion": "string",
+        "imagen": "images/100466584.jpg"
+    },
+    {
+        "num_parte": "B032238",
+        "nombre": "Loctite 271",
+        "descripcion": "Fijador de roscas rojo de alta resistencia.",
+        "imagen": "images/B032238.jpg"
+    }
+]
