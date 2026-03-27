@@ -77,7 +77,7 @@ def inicio():
 
 @app.get("/productos", tags=["Productos"])
 def listar_productos():
-    return [vars(producto) for producto in ProductosDB.lista]
+    return [p.to_dict() for p in ProductosDB.lista]
 
 
 @app.get("/productos/{num_parte}", tags=["Productos"])
@@ -85,7 +85,7 @@ def obtener_producto(num_parte: str):
     producto = ProductosDB.buscar(num_parte)
 
     if producto:
-        return vars(producto)
+        return producto.to_dict()
 
     raise HTTPException(status_code=404, detail="Producto no encontrado")
 
@@ -119,7 +119,7 @@ def crear_producto(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    return vars(producto)
+    return producto.to_dict()
 
 
 @app.put("/productos/{num_parte}", dependencies=[Depends(verificar_api_key)], tags=["Productos"])
@@ -149,7 +149,7 @@ def modificar_producto(
     producto = ProductosDB.modificar(num_parte, nombre, descripcion, ruta_imagen)
 
     if producto:
-        return vars(producto)
+        return producto.to_dict()
 
     raise HTTPException(status_code=404, detail="Producto no encontrado")
 
@@ -175,7 +175,7 @@ def borrar_producto(num_parte: str):
 def catalogo(request: Request, buscar: str = ""):
 
     # 🔥 FIX: convertir objetos a dict
-    productos = [vars(p) for p in ProductosDB.lista]
+    productos = [p.to_dict() for p in ProductosDB.lista]
 
     if buscar:
         buscar = buscar.lower()

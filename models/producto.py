@@ -11,8 +11,8 @@ class Producto:
         if not self._validar_num_parte(num_parte):
             raise ValueError(
                 "num_parte debe tener formato:\n"
-                "• 1 letra + 7 números (A1234567)\n"
-                "• ó 8 números (12345678)"
+                "• 1 letra + 6 números (A123456)\n"
+                "• ó 9 números (123456789)"
             )
 
         if not self._validar_descripcion(descripcion):
@@ -23,7 +23,7 @@ class Producto:
         self.num_parte = num_parte
         self.nombre = nombre
         self.descripcion = descripcion
-        self.imagen = imagen   # ← nuevo campo
+        self.imagen = imagen
 
     @staticmethod
     def _validar_num_parte(num_parte):
@@ -36,3 +36,12 @@ class Producto:
 
     def __str__(self):
         return f"({self.num_parte}) {self.nombre} {self.descripcion}"
+
+    # 🔥 ESTE ES EL FIX CLAVE
+    def to_dict(self):
+        return {
+            "num_parte": self.num_parte,
+            "nombre": self.nombre,
+            "descripcion": self.descripcion,
+            "imagen": self.imagen
+        }
