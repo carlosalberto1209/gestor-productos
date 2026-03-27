@@ -56,11 +56,7 @@ except:
     pass  # evita crash en Render si no existe el método
 
 # Templates (IMPORTANTE para Render)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-templates = Jinja2Templates(
-    directory=os.path.join(BASE_DIR, "templates")
-)
+templates = Jinja2Templates(directory="templates")
 
 # Carpeta imágenes
 if not os.path.exists("images"):
