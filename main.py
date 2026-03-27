@@ -120,6 +120,12 @@ def crear_producto(
         if extension not in ["jpg", "jpeg", "png"]:
             raise HTTPException(status_code=400, detail="Formato no permitido")
 
+            # 🧹 eliminar imágenes anteriores del mismo producto
+        for ext in ["jpg", "jpeg", "png"]:
+            ruta_vieja = f"images/{num_parte}.{ext}"
+            if os.path.exists(ruta_vieja):
+                os.remove(ruta_vieja)
+
         nombre_archivo = f"{num_parte}.{extension}"
         ruta_imagen = f"images/{nombre_archivo}"
 
@@ -151,6 +157,12 @@ def modificar_producto(
 
         if extension not in ["jpg", "jpeg", "png"]:
             raise HTTPException(status_code=400, detail="Formato no permitido")
+
+            # 🧹 eliminar imágenes anteriores del mismo producto
+        for ext in ["jpg", "jpeg", "png"]:
+            ruta_vieja = f"images/{num_parte}.{ext}"
+            if os.path.exists(ruta_vieja):
+                os.remove(ruta_vieja)
 
         nombre_archivo = f"{num_parte}.{extension}"
         ruta_imagen = f"images/{nombre_archivo}"
