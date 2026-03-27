@@ -9,7 +9,7 @@ import os
 
 from repository.productos_db import ProductosDB
 
-API_KEY = "53893735"
+API_KEY = os.getenv("API_KEY", "53893735")
 
 api_key_header = APIKeyHeader(name="x-api-key")
 
