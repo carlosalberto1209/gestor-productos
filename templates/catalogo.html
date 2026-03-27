@@ -1,165 +1,129 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+    <title>Catálogo de Productos</title>
+    <style>
+        body{
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 40px;
+        }
 
-<title>Catálogo de Productos</title>
+        h1{
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-<style>
+        .buscador{
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-body{
-font-family:Arial;
-background:#f4f4f4;
-padding:40px;
-}
+        .buscador input{
+            padding: 10px;
+            width: 250px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
 
-h1{
-text-align:center;
-margin-bottom:30px;
-}
+        .buscador button{
+            padding: 10px 15px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-/* buscador */
+        .catalogo{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 200px);
+            gap: 20px;
+            justify-content: center;
+        }
 
-.buscador{
-text-align:center;
-margin-bottom:30px;
-}
+        .producto{
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+            text-align: center;
+            font-size: 14px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-.buscador input{
-padding:10px;
-width:250px;
-border-radius:5px;
-border:1px solid #ccc;
-}
+        .producto:hover{
+            transform: scale(1.15);
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
 
-.buscador button{
-padding:10px 15px;
-border:none;
-background:#007bff;
-color:white;
-border-radius:5px;
-cursor:pointer;
-}
+        .producto img{
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
 
-/* grid del catalogo */
+        .producto:hover img{
+            transform: scale(1.2);
+        }
 
-.catalogo{
-display:grid;
-grid-template-columns:repeat(auto-fill,200px);
-gap:20px;
-justify-content:center;
-}
+        .overlay{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.75);
+            color: white;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 13px;
+        }
 
-/* tarjeta producto */
+        .producto:hover .overlay{
+            opacity: 1;
+        }
 
-.producto{
-background:white;
-padding:10px;
-border-radius:8px;
-box-shadow:0px 2px 6px rgba(0,0,0,0.2);
-text-align:center;
-font-size:14px;
-transition:transform 0.3s ease, box-shadow 0.3s ease;
-position:relative;
-overflow:hidden;
-}
-
-/* efecto hover */
-
-.producto:hover{
-transform:scale(1.15);
-box-shadow:0px 10px 25px rgba(0,0,0,0.4);
-z-index:10;
-}
-
-/* imagen producto */
-
-.producto img{
-width:150px;
-height:150px;
-object-fit:cover;
-transition:transform 0.4s ease;
-}
-
-.producto:hover img{
-transform:scale(1.2);
-}
-
-/* overlay informativo */
-
-.overlay{
-position:absolute;
-bottom:0;
-left:0;
-width:100%;
-background:rgba(0,0,0,0.75);
-color:white;
-padding:10px;
-opacity:0;
-transition:opacity 0.3s;
-font-size:13px;
-}
-
-.producto:hover .overlay{
-opacity:1;
-}
-
-.num_parte{
-font-weight:bold;
-color:#ddd;
-}
-
-</style>
-
+        .num_parte{
+            font-weight: bold;
+            color: #ddd;
+        }
+    </style>
 </head>
-
-
 <body>
 
-<h1>Catálogo de Productos</h1>
+    <h1>Catálogo de Productos</h1>
 
-<div class="buscador">
+    <div class="buscador">
+        <form method="get" action="/catalogo">
+            <input
+                type="text"
+                name="buscar"
+                placeholder="Buscar por nombre o número de parte"
+                value="{{ buscar }}">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
 
-<form method="get" action="/catalogo">
+    <div class="catalogo">
+        {% for producto in productos %}
+        <div class="producto">
+            {% if producto["imagen"] %}
+                <img src="/images/{{ producto['imagen'] }}">
+            {% endif %}
 
-<input
-type="text"
-name="buscar"
-placeholder="Buscar por nombre o número de parte"
-value="{{ buscar }}">
-
-<button type="submit">Buscar</button>
-
-</form>
-
-</div>
-
-<div class="catalogo">
-
-{% for producto in productos %}
-
-<div class="producto">
-
-{% if producto["imagen"] %}
-<img src="/{{ producto['imagen'] }}">
-{% endif %}
-
-<div class="overlay">
-
-<strong>{{ producto["nombre"] }}</strong><br>
-
-<span class="num_parte">{{ producto["num_parte"] }}</span><br>
-
-{{ producto["descripcion"] }}
-
-</div>
-
-</div>
-
-{% endfor %}
-
-</div>
+            <div class="overlay">
+                <strong>{{ producto["nombre"] }}</strong><br>
+                <span class="num_parte">{{ producto["num_parte"] }}</span><br>
+                {{ producto["descripcion"] }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
 </body>
-
 </html>

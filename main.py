@@ -171,26 +171,42 @@ def borrar_producto(num_parte: str):
 # CATÁLOGO HTML (FIX IMPORTANTE)
 # ================================
 
-@app.get("/catalogo", response_class=HTMLResponse, tags=["Catálogo"])
-def catalogo(request: Request, buscar: str = ""):
+@app.get("/catalogo", response_class=HTMLResponse)
+def ver_catalogo(request: Request, buscar: str = ""):
+    buscar_texto = buscar.strip().lower()
 
-    # 🔥 FIX: convertir objetos a dict
-    productos = [p.to_dict() for p in ProductosDB.lista]
+    productos_filtrados = []
 
-    if buscar:
-        buscar = buscar.lower()
+    for p in ProductosDB.lista:
+        if (
+            buscar_texto in p.nombre.lower()
+            or buscar_texto in p.num_parte.lower()
+        ):
+            productos_filtrados.append(
+                {
+                    "num_parte": p.num_parte,
+                    "nombre": p.nombre,
+                    "descripcion": p.descripcion,
+                    "imagen": p.imagen
+                }
+            )
 
-        productos = [
-            p for p in productos
-            if buscar in p["num_parte"].lower()
-            or buscar in p["nombre"].lower()
+    if not buscar_texto:
+        productos_filtrados = [
+            {
+                "num_parte": p.num_parte,
+                "nombre": p.nombre,
+                "descripcion": p.descripcion,
+                "imagen": p.imagen
+            }
+            for p in ProductosDB.lista
         ]
 
     return templates.TemplateResponse(
         "catalogo.html",
         {
             "request": request,
-            "productos": productos,
+            "productos": productos_filtrados,
             "buscar": buscar
         }
     )
