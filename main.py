@@ -14,7 +14,6 @@ from repository.productos_db import ProductosDB
 # ================================
 
 API_KEY = os.getenv("API_KEY", "53893735")
-
 api_key_header = APIKeyHeader(name="x-api-key")
 
 
@@ -49,31 +48,44 @@ Desarrollado con FastAPI 🚀
 # INICIALIZACIÓN
 # ================================
 
-# Cargar datos
 try:
     ProductosDB.cargar()
-except:
-    pass  # evita crash en Render si no existe el método
+except FileNotFoundError:
+    pass
+except OSError:
+    pass
+except AttributeError:
+    pass
 
-# Templates (IMPORTANTE para Render)
 templates = Jinja2Templates(directory="templates")
 
-# Carpeta imágenes
 if not os.path.exists("images"):
     os.makedirs("images")
 
-# Servir imágenes
 app.mount("/images", StaticFiles(directory="images"), name="images")
+
+
+# ================================
+# VISTA PRINCIPAL
+# ================================
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+def inicio(request: Request):
+    productos = [p.to_dict() for p in ProductosDB.lista]
+
+    return templates.TemplateResponse(
+        "catalogo.html",
+        {
+            "request": request,
+            "productos": productos,
+            "buscar": ""
+        }
+    )
 
 
 # ================================
 # ENDPOINTS API
 # ================================
-
-@app.get("/", include_in_schema=False)
-def inicio():
-    return {"mensaje": "API Gestor de Productos"}
-
 
 @app.get("/productos", tags=["Productos"])
 def listar_productos():
@@ -168,45 +180,26 @@ def borrar_producto(num_parte: str):
 
 
 # ================================
-# CATÁLOGO HTML (FIX IMPORTANTE)
+# CATÁLOGO HTML
 # ================================
 
-@app.get("/catalogo", response_class=HTMLResponse)
-def ver_catalogo(request: Request, buscar: str = ""):
-    buscar_texto = buscar.strip().lower()
+@app.get("/catalogo", response_class=HTMLResponse, tags=["Catálogo"])
+def catalogo(request: Request, buscar: str = ""):
+    productos = [p.to_dict() for p in ProductosDB.lista]
 
-    productos_filtrados = []
-
-    for p in ProductosDB.lista:
-        if (
-            buscar_texto in p.nombre.lower()
-            or buscar_texto in p.num_parte.lower()
-        ):
-            productos_filtrados.append(
-                {
-                    "num_parte": p.num_parte,
-                    "nombre": p.nombre,
-                    "descripcion": p.descripcion,
-                    "imagen": p.imagen
-                }
-            )
-
-    if not buscar_texto:
-        productos_filtrados = [
-            {
-                "num_parte": p.num_parte,
-                "nombre": p.nombre,
-                "descripcion": p.descripcion,
-                "imagen": p.imagen
-            }
-            for p in ProductosDB.lista
+    if buscar:
+        buscar_lower = buscar.lower()
+        productos = [
+            p for p in productos
+            if buscar_lower in p["num_parte"].lower()
+            or buscar_lower in p["nombre"].lower()
         ]
 
     return templates.TemplateResponse(
         "catalogo.html",
         {
             "request": request,
-            "productos": productos_filtrados,
+            "productos": productos,
             "buscar": buscar
         }
     )
