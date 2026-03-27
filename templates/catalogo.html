@@ -113,7 +113,7 @@
         {% for producto in productos %}
         <div class="producto">
             {% if producto["imagen"] %}
-                <img src="/images/{{ producto['imagen'] }}">
+                <img src="/{{ producto['imagen'] }}" alt="{{ producto['nombre'] }}">
             {% endif %}
 
             <div class="overlay">
