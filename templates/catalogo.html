@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Catálogo de Productos</title>
+    <title>Catálogo de productos</title>
     <style>
+        .titulo{
+            text-align:center;
+            margin-bottom:30px;
+            color:#0033cc;
+            font-weight:1000;
+            letter-spacing:3px;
+            font-size:32px;
+            text-transform:uppercase;
+        }
+
         body{
             font-family: Arial;
             background: #f4f4f4;
             padding: 40px;
         }
 
-        h1{
+        .h1{
             text-align: center;
             margin-bottom: 30px;
         }
@@ -52,6 +62,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
+            border:1px solid #555;
         }
 
         .producto:hover{
@@ -96,7 +107,7 @@
 </head>
 <body>
 
-    <h1>Catálogo de Productos</h1>
+    <h1 class="titulo">CATÁLOGO DE PRODUCTOS SLB</h1>
 
     <div class="buscador">
         <form method="get" action="/catalogo">
